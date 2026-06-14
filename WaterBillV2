@@ -1,0 +1,92 @@
+import java.util.Scanner;
+
+public class WaterBillCalculator {
+
+    public static double computeWaterBill(double consumption, String type) {
+        double rate = 0.0;
+
+        // Define rates based on the type of user
+        if (type.equals("residential")) {
+            if (consumption <= 10) {
+                rate = 10.00; // Fixed rate for the first 10 cubic meters
+            } else if (consumption <= 30) {
+                rate = 15.00; // Rate for 11 to 30 cubic meters
+            } else {
+                rate = 20.00; // Rate for above 30 cubic meters
+            }
+        } else if (type.equals("commercial")) {
+            if (consumption <= 10) {
+                rate = 20.00; // Fixed rate for the first 10 cubic meters
+            } else if (consumption <= 30) {
+                rate = 30.00; // Rate for 11 to 30 cubic meters
+            } else {
+                rate = 40.00; // Rate for above 30 cubic meters
+            }
+        } else {
+            System.out.println("Invalid type!");
+            return 0.0;
+        }
+
+        return consumption * rate; // Calculate total bill
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        double previousReading, presentReading, consumption;
+        String type;
+
+        // Ask the user if they live in residential or commercial
+        System.out.print("Do you live in residential or commercial? (Enter 'residential' or 'commercial'): ");
+        type = scanner.next();
+
+        // Validate type input
+        if (!type.equals("residential") && !type.equals("commercial")) {
+            System.out.println("Invalid input! Please enter 'residential' or 'commercial'.");
+            return;
+        }
+
+        // Get previous reading from the user
+        System.out.print("Enter the previous reading (in cubic meters): ");
+        previousReading = scanner.nextDouble();
+
+        // Validate previous reading
+        if (previousReading < 0) {
+            System.out.println("Previous reading cannot be negative!");
+            return;
+        }
+
+        // Get present reading from the user
+        System.out.print("Enter the present reading (in cubic meters): ");
+        presentReading = scanner.nextDouble();
+
+        // Validate present reading
+        if (presentReading < 0) {
+            System.out.println("Present reading cannot be negative!");
+            return;
+        }
+
+        // Check if present reading is less than previous reading
+        if (presentReading < previousReading) {
+            System.out.println("Present reading cannot be less than previous reading!");
+            return;
+        }
+
+        // Calculate water consumption
+        consumption = presentReading - previousReading;
+
+        // Ask for the tube size
+        System.out.print("Enter the tube size (in inches): ");
+        String tubeSize = scanner.next();
+
+        // Display the tube size
+        System.out.println("You entered a tube size of: " + tubeSize + " inches.");
+
+        // Compute and display the water bill
+        double bill = computeWaterBill(consumption, type);
+        System.out.printf("Your water consumption is: %.2f cubic meters.%n", consumption);
+        System.out.printf("Your total water bill is: Php %.2f%n", bill);
+
+        scanner.close();
+    }
+}

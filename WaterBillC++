@@ -1,0 +1,85 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+
+using namespace std;
+
+double computeWaterBill(double consumption, string type) {
+    double rate = 0.0;
+
+    // Define rates based on the type of user
+    if (type == "residential") {
+        if (consumption <= 10) {
+            rate = 10.00; // Fixed rate for the first 10 cubic meters
+        } else if (consumption <= 30) {
+            rate = 15.00; // Rate for 11 to 30 cubic meters
+        } else {
+            rate = 20.00; // Rate for above 30 cubic meters
+        }
+    } else if (type == "commercial") {
+        if (consumption <= 10) {
+            rate = 20.00; // Fixed rate for the first 10 cubic meters
+        } else if (consumption <= 30) {
+            rate = 30.00; // Rate for 11 to 30 cubic meters
+        } else {
+            rate = 40.00; // Rate for above 30 cubic meters
+        }
+    } else {
+        cout << "Invalid type!" << endl;
+        return 0.0;
+    }
+
+    return consumption * rate; // Calculate total bill
+}
+
+int main() {
+    double previousReading, presentReading, consumption;
+    string type;
+
+    // Get previous reading from the user
+    cout << "Enter the previous reading (in cubic meters): ";
+    cin >> previousReading;
+
+    // Validate previous reading
+    if (previousReading < 0) {
+        cout << "Previous reading cannot be negative!" << endl;
+        return 1;
+    }
+
+    // Get present reading from the user
+    cout << "Enter the present reading (in cubic meters): ";
+    cin >> presentReading;
+
+    // Validate present reading
+    if (presentReading < 0) {
+        cout << "Present reading cannot be negative!" << endl;
+        return 1;
+    }
+
+    // Check if present reading is less than previous reading
+    if (presentReading < previousReading) {
+        cout << "Present reading cannot be less than previous reading!" << endl;
+        return 1;
+    }
+
+    // Calculate water consumption
+    consumption = presentReading - previousReading;
+
+    // Ask the user if they live in residential or commercial
+    cout << "Do you live in residential or commercial? (Enter 'residential' or 'commercial'): ";
+    cin >> type;
+
+    // Validate type input
+    if (type != "residential" && type != "commercial") {
+        cout << "Invalid input! Please enter 'residential' or 'commercial'." << endl;
+        return 1;
+    }
+
+    // Compute and display the water bill
+    double bill = computeWaterBill(consumption, type);
+    cout << fixed << setprecision(2);
+    cout << "Your water consumption is: " << consumption << " cubic meters." << endl;
+    cout << "Your total water bill is: Php " << bill << endl;
+
+    return 0;
+}
